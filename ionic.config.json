@@ -1,0 +1,7 @@
+{
+  "name": "SanaTech",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react-vite"
+}
