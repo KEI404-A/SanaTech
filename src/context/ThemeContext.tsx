@@ -1,6 +1,6 @@
 // src/contexts/ThemeContext.tsx
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback, useMemo } from 'react';
 
 interface ThemeContextType {
   isDark: boolean;
@@ -38,14 +38,16 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     }
   }, [isDark]);
 
-  const toggleTheme = () => {
+  // Memoize toggleTheme function to prevent re-creation
+  const toggleTheme = useCallback(() => {
     setIsDark(prev => !prev);
-  };
+  }, []);
 
-  const value: ThemeContextType = {
+  // Memoize context value to prevent unnecessary re-renders
+  const value = useMemo<ThemeContextType>(() => ({
     isDark,
     toggleTheme
-  };
+  }), [isDark, toggleTheme]);
 
   return (
     <ThemeContext.Provider value={value}>

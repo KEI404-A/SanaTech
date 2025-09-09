@@ -17,7 +17,6 @@ import {
 import { IonReactRouter } from '@ionic/react-router';
 import { homeOutline, heartOutline, leafOutline, bookOutline, chatbubblesOutline, personCircleOutline } from 'ionicons/icons';
 
-
 // Impor semua halaman tab
 import Tab1 from './pages/Tab1';
 import Tab2 from './pages/Tab2';
@@ -48,7 +47,11 @@ import '@ionic/react/css/display.css';
 import './theme/variables.css';
 import './theme/tailwind.css';
 
-setupIonicReact();
+setupIonicReact({
+  mode: 'md',
+  animated: false,
+  rippleEffect: false
+});
 
 const AppTabs: React.FC = () => (
   <IonTabs>
@@ -95,21 +98,21 @@ const AppTabs: React.FC = () => (
 
 const App: React.FC = () => (
   <ThemeProvider>
-  <IonApp>
-    <IonReactRouter>
-      <IonRouterOutlet>
-        <Route exact path="/login" component={Login} />
-        <Route exact path="/privacy-policy" component={PrivacyPolicyPage} />
-        <Route exact path="/terms-and-conditions" component={TermsAndConditionsPage} />
-        <ProtectedRoute path="/tabs" component={AppTabs} />
-        <ProtectedRoute exact path="/faq" component={FAQPage} />
-        <ProtectedRoute exact path="/about" component={AboutDeveloperPage} />
-        <Route exact path="/">
-          <Redirect to="/tabs/tab1" />
-        </Route>
-      </IonRouterOutlet>
-    </IonReactRouter>
-  </IonApp>
+    <IonApp>
+      <IonReactRouter>
+        <IonRouterOutlet>
+          <Route exact path="/login" component={Login} />
+          <Route exact path="/privacy-policy" component={PrivacyPolicyPage} />
+          <Route exact path="/terms-and-conditions" component={TermsAndConditionsPage} />
+          <ProtectedRoute path="/tabs" component={AppTabs} />
+          <ProtectedRoute exact path="/faq" component={FAQPage} />
+          <ProtectedRoute exact path="/about" component={AboutDeveloperPage} />
+          <Route exact path="/">
+            <Redirect to="/tabs/tab1" />
+          </Route>
+        </IonRouterOutlet>
+      </IonReactRouter>
+    </IonApp>
   </ThemeProvider>
 );
 

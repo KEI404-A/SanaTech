@@ -80,14 +80,27 @@ body.dark {
   --ion-text-color: #ffffff;
 }
 
-/* Menargetkan bagian 'scroll' di dalam shadow DOM ion-content 
-   untuk browser berbasis WebKit (Chrome, Safari, Edge) */
+/* Hide scrollbar */
 ion-content::part(scroll)::-webkit-scrollbar {
   display: none;
 }
 
-/* Fallback untuk browser IE, Edge, dan Firefox */
 ion-content::part(scroll) {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
+}
+
+/* Fix input typing issues - minimal approach */
+ion-input input,
+ion-searchbar input,
+input[type="text"],
+input[type="search"],
+textarea {
+  -webkit-user-select: text !important;
+  user-select: text !important;
+}
+
+/* Disable all ionic animations yang bisa interfere dengan input focus */
+* {
+  --ion-animation-duration: 0ms !important;
 }

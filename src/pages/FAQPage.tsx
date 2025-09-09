@@ -39,16 +39,16 @@ const FAQItem: React.FC<FAQItemProps> = ({ question, answer, icon, category }) =
           <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${
             isOpen ? 'bg-blue-100 rotate-180' : 'bg-gray-100'
           }`}>
-            <IonIcon 
-              icon={chevronDown} 
+            <IonIcon
+              icon={chevronDown}
               className={`text-sm transition-colors duration-300 ${
                 isOpen ? 'text-blue-600' : 'text-gray-500'
-              }`} 
+              }`}
             />
           </div>
         </div>
       </button>
-      
+
       <div className={`transition-all duration-300 ease-in-out ${
         isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
       } overflow-hidden`}>
@@ -124,7 +124,7 @@ const FAQPage: React.FC = () => {
           <IonTitle style={{ color: 'white' }} className="font-semibold">FAQ - Tanya Jawab</IonTitle>
         </IonToolbar>
       </IonHeader>
-      
+
       <IonContent fullscreen className="bg-gray-50">
         {/* Header Section */}
         <div className="bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-700 text-white px-6 py-8">

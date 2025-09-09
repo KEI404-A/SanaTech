@@ -1,8 +1,8 @@
 // src/pages/Login.tsx (Fixed Desktop Layout)
 
 import React, { useState } from 'react';
-import { 
-  IonContent, IonPage, IonIcon, IonText, IonSpinner, IonRouterLink 
+import {
+  IonContent, IonPage, IonIcon, IonText, IonSpinner, IonRouterLink
 } from '@ionic/react';
 import { useHistory } from 'react-router-dom';
 import { logoGoogle } from 'ionicons/icons';

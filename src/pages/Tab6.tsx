@@ -505,7 +505,7 @@ const Tab6: React.FC = () => {
               </div>
             </div>
           </IonRouterLink>
-          
+
           <IonRouterLink routerLink="/about" className="w-full">
             <div className="w-full text-left p-3 hover:bg-gray-50 rounded-xl transition-colors">
               <div className="flex items-center justify-between">
