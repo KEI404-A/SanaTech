@@ -12,10 +12,19 @@ import {
   IonTabBar,
   IonTabButton,
   IonTabs,
-  setupIonicReact
+  setupIonicReact,
+  IonFab,
+  IonFabButton,
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import { homeOutline, heartOutline, leafOutline, bookOutline, chatbubblesOutline, personCircleOutline } from 'ionicons/icons';
+import { 
+  homeOutline, 
+  heartOutline, 
+  leafOutline, 
+  bookOutline, 
+  chatbubblesOutline, 
+  personCircleOutline 
+} from 'ionicons/icons';
 
 // Impor semua halaman tab
 import Tab1 from './pages/Tab1';
@@ -24,6 +33,7 @@ import Tab3 from './pages/Tab3';
 import Tab4 from './pages/Tab4';
 import Tab5 from './pages/Tab5';
 import Tab6 from './pages/Tab6';
+import ChatAI from './pages/ChatAI/ChatAI';
 
 // Impor halaman Login dan ProtectedRoute
 import Login from './pages/Login';
@@ -67,6 +77,7 @@ const AppTabs: React.FC = () => (
         <Redirect to="/tabs/tab1" />
       </Route>
     </IonRouterOutlet>
+    
     <IonTabBar slot="bottom">
       <IonTabButton tab="tab1" href="/tabs/tab1">
         <IonIcon icon={homeOutline} />
@@ -93,6 +104,15 @@ const AppTabs: React.FC = () => (
         <IonLabel>Profil</IonLabel>
       </IonTabButton>
     </IonTabBar>
+
+    {/* ================================================= */}
+    {/* == FLOATING BUTTON untuk ChatAI == */}
+    {/* ================================================= */}
+    <IonFab vertical="bottom" horizontal="end" slot="fixed" style={{ marginBottom: '60px' }}>
+      <IonFabButton routerLink="/chatai">
+        <IonIcon icon={chatbubblesOutline}></IonIcon>
+      </IonFabButton>
+    </IonFab>
   </IonTabs>
 );
 
@@ -104,9 +124,14 @@ const App: React.FC = () => (
           <Route exact path="/login" component={Login} />
           <Route exact path="/privacy-policy" component={PrivacyPolicyPage} />
           <Route exact path="/terms-and-conditions" component={TermsAndConditionsPage} />
+          <Route exact path="/news" component={NewsPage} />
+          <Route exact path="/faq" component={FAQPage} />
+          <Route exact path="/about-developer" component={AboutDeveloperPage} />
+          
+          {/* Route untuk ChatAI dibuat di sini agar tampil full screen */}
+          <Route path="/chatai" component={ChatAI} exact />
+          
           <ProtectedRoute path="/tabs" component={AppTabs} />
-          <ProtectedRoute exact path="/faq" component={FAQPage} />
-          <ProtectedRoute exact path="/about" component={AboutDeveloperPage} />
           <Route exact path="/">
             <Redirect to="/tabs/tab1" />
           </Route>

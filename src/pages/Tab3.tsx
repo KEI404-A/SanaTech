@@ -3,7 +3,7 @@ import { IonContent, IonPage } from '@ionic/react';
 import { ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, AreaChart, Area, PieChart, Pie, Cell, Tooltip, CartesianGrid, XAxis, YAxis } from 'recharts';
 import { Brain, Smile, Frown, Meh, TrendingUp, TrendingDown, Moon, Sun, AlertTriangle, CheckCircle } from 'lucide-react';
 import { ref, onValue } from "firebase/database";
-import { db } from "../firebase-config";
+import { realtimeDb } from "../firebase-config";
 
 // --- Definisi Tipe untuk Props ---
 interface MoodMetricCardProps {
@@ -60,7 +60,7 @@ const Tab3: React.FC = () => {
 
   // Firebase data fetching
   useEffect(() => {
-    const dataRef = ref(db, "readings/latest");
+    const dataRef = ref(realtimeDb, "readings/latest");
     const unsubscribe = onValue(dataRef, (snapshot) => {
       if (snapshot.exists()) {
         const data = snapshot.val();

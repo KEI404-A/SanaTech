@@ -2,6 +2,7 @@
 
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 import { getDatabase } from "firebase/database";
 
 const firebaseConfig = {
@@ -20,6 +21,8 @@ const app = initializeApp(firebaseConfig);
 // Firebase Authentication
 export const auth = getAuth(app);
 
-// Firebase Realtime Database
-export const db = getDatabase(app);
-// export const db = getDatabase(app); --- IGNORE ---
+// Firebase Firestore (untuk user data)
+export const db = getFirestore(app);
+
+// Firebase Realtime Database (jika diperlukan)
+export const realtimeDb = getDatabase(app);

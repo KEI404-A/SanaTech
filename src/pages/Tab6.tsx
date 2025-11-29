@@ -533,7 +533,7 @@ const Tab6: React.FC = () => {
   interface TabButtonProps {
     id: string;
     label: string;
-    icon: ComponentType<{ size?: number }>;
+    icon: ComponentType<any>;
     isActive: boolean;
     onClick: () => void;
   }

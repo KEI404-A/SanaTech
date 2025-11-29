@@ -1,12 +1,12 @@
 // src/pages/Login.tsx (Fixed Desktop Layout)
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   IonContent, IonPage, IonIcon, IonText, IonSpinner, IonRouterLink
 } from '@ionic/react';
 import { useHistory } from 'react-router-dom';
 import { logoGoogle } from 'ionicons/icons';
-import { signInWithGoogle, registerWithEmail, signInWithEmail } from '../services/authService';
+import { signInWithGoogle, registerWithEmail, signInWithEmail, handleGoogleRedirect } from '../services/authService';
 import { FirebaseError } from 'firebase/app';
 import { Eye, EyeOff, Mail, Lock, User, Shield, Heart, Activity } from 'lucide-react';
 
@@ -20,15 +20,48 @@ const Login: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
+  // Handle Google redirect result saat page load
+  useEffect(() => {
+    const checkRedirectResult = async () => {
+      try {
+        const result = await handleGoogleRedirect();
+        if (result.success && result.user) {
+          history.replace('/tabs/tab1');
+        }
+      } catch (err) {
+        console.error('Error checking redirect result:', err);
+      }
+    };
+    
+    checkRedirectResult();
+  }, [history]);
+
   const handleGoogleSignIn = async () => {
     setLoading(true);
-    const result = await signInWithGoogle();
-    if (result.success) {
-      history.replace('/tabs/tab1');
-    } else {
-      setError('Gagal masuk dengan Google. Coba lagi.');
+    setError('');
+    
+    try {
+      const result = await signInWithGoogle();
+      
+      if (result.success) {
+        if (result.redirect) {
+          // Redirect sedang berlangsung, tidak perlu melakukan apa-apa
+          // User akan di-redirect dan kemudian kembali ke halaman ini
+          return;
+        } else if (result.user) {
+          history.replace('/tabs/tab1');
+        }
+      } else {
+        // Gunakan errorMessage jika ada, atau pesan default
+        const errorMsg = (result as any).errorMessage || 'Gagal masuk dengan Google. Coba lagi.';
+        setError(errorMsg);
+      }
+    } catch (err: any) {
+      setError('Terjadi kesalahan saat masuk dengan Google. Coba lagi.');
+      console.error('Google sign-in error:', err);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const handleEmailAuth = async (event: React.FormEvent) => {
@@ -36,37 +69,74 @@ const Login: React.FC = () => {
     setLoading(true);
     setError('');
 
-    let result;
-    if (isRegisterMode) {
-      if (!displayName) {
-        setError('Nama harus diisi.');
-        setLoading(false);
-        return;
-      }
-      result = await registerWithEmail(displayName, email, password);
-    } else {
-      result = await signInWithEmail(email, password);
-    }
-
-    if (result.success) {
-      history.replace('/tabs/tab1');
-    } else {
-      const err = result.error;
-      if (err instanceof FirebaseError) {
-        if (err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password') {
-          setError('Email atau password salah.');
-        } else if (err.code === 'auth/email-already-in-use') {
-          setError('Email ini sudah terdaftar. Silakan masuk.');
-        } else if (err.code === 'auth/weak-password') {
-          setError('Password harus terdiri dari minimal 6 karakter.');
-        } else {
-          setError('Terjadi kesalahan. Coba lagi.');
+    try {
+      let result;
+      if (isRegisterMode) {
+        if (!displayName || displayName.trim() === '') {
+          setError('Nama harus diisi.');
+          setLoading(false);
+          return;
         }
+        if (password.length < 6) {
+          setError('Password harus terdiri dari minimal 6 karakter.');
+          setLoading(false);
+          return;
+        }
+        result = await registerWithEmail(displayName.trim(), email.trim(), password);
       } else {
-        setError('Terjadi kesalahan yang tidak diketahui.');
+        if (!email.trim() || !password) {
+          setError('Email dan password harus diisi.');
+          setLoading(false);
+          return;
+        }
+        result = await signInWithEmail(email.trim(), password);
       }
+
+      if (result.success) {
+        history.replace('/tabs/tab1');
+      } else {
+        const err = result.error;
+        if (err instanceof FirebaseError) {
+          let errorMessage = 'Terjadi kesalahan. Coba lagi.';
+          
+          switch (err.code) {
+            case 'auth/user-not-found':
+              errorMessage = 'Email tidak terdaftar. Silakan daftar terlebih dahulu.';
+              break;
+            case 'auth/wrong-password':
+            case 'auth/invalid-credential':
+              errorMessage = 'Email atau password salah.';
+              break;
+            case 'auth/email-already-in-use':
+              errorMessage = 'Email ini sudah terdaftar. Silakan masuk atau gunakan email lain.';
+              break;
+            case 'auth/weak-password':
+              errorMessage = 'Password harus terdiri dari minimal 6 karakter.';
+              break;
+            case 'auth/invalid-email':
+              errorMessage = 'Format email tidak valid.';
+              break;
+            case 'auth/network-request-failed':
+              errorMessage = 'Koneksi internet bermasalah. Periksa koneksi Anda.';
+              break;
+            case 'auth/too-many-requests':
+              errorMessage = 'Terlalu banyak percobaan. Silakan coba lagi nanti.';
+              break;
+            default:
+              errorMessage = `Terjadi kesalahan: ${err.message}`;
+          }
+          
+          setError(errorMessage);
+        } else {
+          setError('Terjadi kesalahan yang tidak diketahui. Coba lagi.');
+        }
+      }
+    } catch (err: any) {
+      setError('Terjadi kesalahan saat autentikasi. Coba lagi.');
+      console.error('Email auth error:', err);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const toggleMode = () => {

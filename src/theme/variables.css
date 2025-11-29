@@ -85,6 +85,10 @@ ion-content::part(scroll)::-webkit-scrollbar {
   display: none;
 }
 
+ion-fab {
+  z-index: 999 !important;
+}
+
 ion-content::part(scroll) {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { IonContent, IonPage } from '@ionic/react';
 import { Heart, Share2, MessageCircle, Calendar, User, ArrowLeft, Send, Eye, Stethoscope, Activity, Brain, Shield } from 'lucide-react';
 
